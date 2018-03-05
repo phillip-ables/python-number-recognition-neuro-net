@@ -60,7 +60,7 @@ def conv_net(x, weights, biases, dropout):  # x is our input, rates are our conn
 
   # create weights, weights as a pictionary
 weights = {
-    'wc1': tf.Variable(tf.random_normal([5,5,1.32])),  # first set of weights, a 5 by 5 convolutional, with one input  and thirty two outputs, 5 by 5 width and height, one input an image, 32 output thats the bits
+    'wc1': tf.Variable(tf.random_normal([5,5,1,32])),  # first set of weights, a 5 by 5 convolutional, with one input  and thirty two outputs, 5 by 5 width and height, one input an image, 32 output thats the bits
     'wc2': tf.Variable(tf.random_normal([5,5,32,64])),  # 32 inputs, their is thirty two different connections its going 32 different and its splitting it into 64 thats our synaptic connections
     'wd1': tf.Variable(tf.random_normal([7*7*64, 1024])),  # fully connected layer
     'out': tf.Variable(tf.random_normal([1024, n_classes]))  # this is where we predict our class
@@ -71,3 +71,19 @@ pred = conv_net(x, weights, biases, keep_prob)  # keep prob is our dropout
   # define optimizer and loss, loss is our cost.... this is measuring the probability error in a classification task 
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))  # reduce mean is synonamous with reducing loss
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)  # Atom reduces the loss over a gradient descent process 
+
+# evaluate our model
+correct_pred = tf.equal(tf.arg_max(pred, 1), tf.arg_max(y,1))  # we have our test data and our predicted value and we want to see the difference in that
+accuracy = tf.reduce_mean(tf.case(correct_pred, tf.float32))
+
+#initialize the variables
+init = tf.initialize_all_variables()
+
+#launch the graph
+with tf.Session as sess:  # a graph is encapsulated by a session
+    sess.run(init)
+    step = 1
+    # keep training until max iterations
+    while step * batch_size < training_iters:
+        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y, keep_prob: dropout})
+        print('iteration step')

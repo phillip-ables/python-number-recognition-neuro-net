@@ -65,3 +65,9 @@ weights = {
     'wd1': tf.Variable(tf.random_normal([7*7*64, 1024])),  # fully connected layer
     'out': tf.Variable(tf.random_normal([1024, n_classes]))  # this is where we predict our class
 }
+
+  # construct model
+pred = conv_net(x, weights, biases, keep_prob)  # keep prob is our dropout
+  # define optimizer and loss, loss is our cost.... this is measuring the probability error in a classification task 
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))  # reduce mean is synonamous with reducing loss
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)  # Atom reduces the loss over a gradient descent process 

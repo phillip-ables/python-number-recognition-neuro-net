@@ -43,5 +43,16 @@ def conv_net(x, weights, biases, dropout):  # x is our input, rates are our conn
     conv1 = maxpool2d(conv1, weights['wc2'], biases['bc2'])  # boom boom boom
 
 
-    conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])  # takes our previous layer as our input
+    conv2 = conv2(conv1, weights['wc2'], biases['bc2'])  # takes our previous layer as our input
     conv2 = maxpool2d(conv2, k=2)
+
+      # weve got both our concolutional layers now we need to create a fully connected layer
+      # a fully connected layer is a generic layer, every neuron in the fully connected layer is connected to the convolutional network, just a representation of image data
+    fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()])
+    fc1 = tf.add(tf.matmul(fc1, weights['wd1'], biases['bd1']))  # this is where the actual matrix multiply happens, all that data weve been transforming this is where that actually happens, the actual classification, all that data - htis si where we combine it together
+    fc1 = tf.nn.relu(fc1)  # add our activation function relu
+      # apply dropout
+    fc1 = tf.nn.dropout(fc1, dropout)
+
+      # output, class prediction
+    out = tf.add(tf.matmul(fc1, weights['out'], biases['out']))

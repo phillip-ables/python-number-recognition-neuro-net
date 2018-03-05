@@ -31,4 +31,17 @@ def conv2d(x, W, b, strides=1):
 
 def maxpool2d(x, k=2):  # pooling takes small rect blocks from the confulusional layer, little samples, pools, max pool the average of the learned linear compulation 
     return tf.nn.max_pool(x, ksize=[1,k,k,1], strides=[1,k,k,1], padding='SAME')  # 4d tensor there are four variables there
+  # weve created our definitions now lets create our model
 
+def conv_net(x, weights, biases, dropout):  # x is our input, rates are our connects or synapses between layers, biases affect each of our layers in some way
+      # reshape our input data so it is formated for our computational graph that we are about to create
+    x = tf.reshape(x, shape=[-1,28,28,1])  # our image is 28 by 28 pixel and our width and height im going to set to one
+
+      #convolutional layer
+    conv1 = conv2d(x, weights['wc1'], biases['bc1'])
+      #max pooling layer
+    conv1 = maxpool2d(conv1, weights['wc2'], biases['bc2'])  # boom boom boom
+
+
+    conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])  # takes our previous layer as our input
+    conv2 = maxpool2d(conv2, k=2)

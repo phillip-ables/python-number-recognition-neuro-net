@@ -43,7 +43,7 @@ def conv_net(x, weights, biases, dropout):  # x is our input, rates are our conn
     conv1 = maxpool2d(conv1, weights['wc2'], biases['bc2'])  # boom boom boom
 
 
-    conv2 = conv2(conv1, weights['wc2'], biases['bc2'])  # takes our previous layer as our input
+    conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])  # takes our previous layer as our input
     conv2 = maxpool2d(conv2, k=2)
 
       # weve got both our concolutional layers now we need to create a fully connected layer
@@ -56,3 +56,12 @@ def conv_net(x, weights, biases, dropout):  # x is our input, rates are our conn
 
       # output, class prediction
     out = tf.add(tf.matmul(fc1, weights['out'], biases['out']))
+    return out  # this is our class classification
+
+  # create weights, weights as a pictionary
+weights = {
+    'wc1': tf.Variable(tf.random_normal([5,5,1.32])),  # first set of weights, a 5 by 5 convolutional, with one input  and thirty two outputs, 5 by 5 width and height, one input an image, 32 output thats the bits
+    'wc2': tf.Variable(tf.random_normal([5,5,32,64])),  # 32 inputs, their is thirty two different connections its going 32 different and its splitting it into 64 thats our synaptic connections
+    'wd1': tf.Variable(tf.random_normal([7*7*64, 1024])),  # fully connected layer
+    'out': tf.Variable(tf.random_normal([1024, n_classes]))  # this is where we predict our class
+}

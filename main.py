@@ -22,4 +22,13 @@ x = tf.placeholder(tf.float32, [None, n_input])  # this is our gateway one for t
 y = tf.placeholder(tf.float32, [None, n_classes])  
 keep_prob = tf.placeholder(tf.float32)  # tf placeholder object represents gateways, its a gateway into our computational graph. so thats how the data flows into our graph
 
+  # convelutional layers, taking that image and transforming it in some sort of way
+def conv2d(x, W, b, strides=1):
+    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding = 'SAME')  # strides are a list of integers, a tensors = data
+    x = tf.nn.bias_add(x, b)  # tuning knob, makes our model more accurate
+    return tf.nn.relu(x)  # rectified linear unit, activation function, 
+  # image gets hieracharly more abstract as you go in your network
+
+def maxpool2d(x, k=2):  # pooling takes small rect blocks from the confulusional layer, little samples, pools, max pool the average of the learned linear compulation 
+    return tf.nn.max_pool(x, ksize=[1,k,k,1], strides=[1,k,k,1], padding='SAME')  # 4d tensor there are four variables there
 
